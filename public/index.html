@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech recognition</title>
+</head>
+<body>
+    <h2>DEEPGRAM</h2>
+    <p></p>
+    <script>
+        const DG_ENDPOINT = 'wss://api.deepgram.com/v1/listen';
+        navigator.mediaDevices.getUserMedia({audio: true}).then(stream =>{
+            const mediaRecorder = new MediaRecorder(stream, {mimeType:'audio/webm'})
+            const socket = new WebSocket(DG_ENDPOINT, ['token','16127146b3842f1e66e891f1ab70bef7b9e3657a'])
+
+            socket.onopen = () => {
+                mediaRecorder.addEventListener('dataavailable', event => {
+                    socket.send(event.data)
+                })
+                mediaRecorder.start(0.001)
+            }
+
+            socket.onmessage = message =>{
+                const data = JSON.parse(message.data)
+                const {is_final} = data;
+                const transcript = data.channel.alternatives[0].transcript;
+                if(transcript && is_final){
+                    document.querySelector('p').textContent += ' ' + transcript
+                }
+            }
+        })
+    </script>
+</body>
+</html>
