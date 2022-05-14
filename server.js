@@ -5,8 +5,8 @@ const {Deepgram} = require('@deepgram/sdk');
 const app = express();
 
 const deepgram = new Deepgram(process.env.dg_key)
-deepgram.transcription.preRecorded({url: audioFileUrl}).then(data =>{
-    console.dir(data,{depth:null});
+deepgram.transcription.preRecorded(
+    {url: audioFileUrl}).then(data =>{
 })
 
 
