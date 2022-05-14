@@ -27,7 +27,7 @@ const DG_ENDPOINT = 'wss://api.deepgram.com/v1/listen';
         navigator.mediaDevices.getUserMedia({audio: true}).then(stream =>{
             if(!MediaRecorder.isTypeSupported('audio/webm')) return alert("Browser not supported");
             const mediaRecorder = new MediaRecorder(stream, {mimeType:'audio/webm'})
-            const socket = new WebSocket(DG_ENDPOINT, ['token','16127146b3842f1e66e891f1ab70bef7b9e3657a'])
+            const socket = new WebSocket(DG_ENDPOINT, ['token',process.env.dg_key]);
 
             socket.onopen = () => {
                 mediaRecorder.addEventListener('dataavailable', event => {
